@@ -67,6 +67,40 @@
       margin-top:-20px;
       background:orangered;
     }
+
+    /*2-3. vertical-align CSS Property*/
+    .table{
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    .table{
+      border:1px solid limegreen;
+    }
+
+    .table td{
+      width:200px;
+      height:200px;
+      border-left:1px solid brown;
+      border-right:1px solid brown;
+      text-align:center;
+    }
+
+    .vt-align-text{
+      vertical-align:top;
+    }
+
+    .vt-align-box{
+      vertical-align:bottom;
+    }
+
+    .display-cell{
+      width:200px;
+      display:table-cell;
+      vertical-align:middle;
+      text-align:center;
+    }
+
   </style>
 </head>
 <body>
@@ -138,6 +172,35 @@
   <div class="absolute-vt-center">
     박스 세로 정렬
   </div>
+</div>
+
+<br /><br /><br /><br /><br /><br />
+
+<!--2-3. vertical-align css property 를 사용하는 방법-->
+<table class="table">
+  <tr>
+    <td class="vt-align-text">
+      텍스트 세로 정렬
+    </td>
+    <td class="vt-align-box">
+      <div class="align-box">
+        박스 세로 정렬
+      </div>
+    </td>
+  </tr>
+</table>
+
+<br /><br /><br /><br /><br /><br />
+
+<div class="wrap-height display-cell">
+  텍스트 세로 정렬
+</div>
+
+<br /><br /><br /><br /><br /><br />
+
+<div class="wrap-height display-cell">
+  텍스트 세로 정렬<br />
+  텍스트 세로 정렬
 </div>
 
 </body>
