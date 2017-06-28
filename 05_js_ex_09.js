@@ -16,4 +16,23 @@
 var a = 10;
 var b = 20;
 
-function foo()
+function foo(){
+
+  var c = 30;
+  console.log(a+b+c);
+
+  temp(); //함수 안에서 다른 함수(temp)를 실행함
+
+}
+
+function temp(){
+
+  // 전역변수, 지역변수 같은 변수 적용 범위는 선언(정의)될 때, 결정됨
+  //console.log(a+b+c);
+
+}
+
+foo();
+
+//console.log(a+b+c); c 변수 접근 불가.. 정의되지 않았음 foo 함수에 정의된 c 는 지역변수이므로 코드 전체에 접근되지 않음.
+
