@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSS 제어</title>
+
+  <style>
+
+    .box1{
+      width:100px;
+      height:100px;
+      background:skyblue;
+    }
+
+    .box2{
+      width:100px;
+      height:100px;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+</head>
+<body>
+
+<div class="box1" id="box1">box1</div>
+
+<p class="box2" id="box2">box1</p>
+
+<!--
+
+  D.O.M : Document Object Model - 웹 문서를 객체의 형태로 표현하는 것 ( document 객체 )
+
+  B.O.M : Browser Object Model - 브라우저를 객체의 형태로 표현하는 것 ( window 객체 )
+
+-->
+
+<!-- 페이지 불러오는 순서가 위에서부터 아래로 순차적인데 css 태그는 항상 주시하고 있는 반면, 스크립트 태그는 자기순서 이전에 대상이 없으면 작동하지 않음.-->
+<script>
+
+  // 객체 출력
+  console.dir( document );
+  console.log( window );
+
+  // DOM Node 접근
+  console.log(document.getElementById('box1'));
+
+  console.log(document.getElementsByClassName('box1'));
+
+  console.log(document.getElementsByTagName('div'));
+
+  // DOM 스타일 제어
+  document.getElementById('box1').style.background='red';  // . 으로 구분되는것들은 객체 맨 마지막에 온건 객체 property
+  document.getElementsByClassName('box1')[0].style.color='white';
+  document.getElementsByTagName('div')[0].style.fontSize='30px';
+
+  // jQuery DOM 스타일 제어
+  $('#box2').css('background','orange');
+  $('.box2').css({'color':'white'});
+  $('p').css({'font-size':'30px'});
+</script>
+
+</body>
+</html>
+
+
+<!--var box1 = document.getElementById('box1'); &lt;!&ndash; id가 box1 인 애를 찾아와서 변수 box1에 넣어주고 &ndash;&gt;-->
+<!--box1.style.background = 'red';              &lt;!&ndash; box1 변수에 style 태그로 background에 red 색상을 입력해준것 &ndash;&gt;-->
