@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>jQuery 기본 사용법</title>
+  <!--jQuery 라이브러리 외부 파일을 인터넷에서 불러오기-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script>
+
+    $(function(){ //<---- jquery 진입점 모양
+
+      // $() 안에 넣어주는 대상은 CSS 선택자의 모양과 같음
+      // function, var : 예약어 / 함수이름 / 변수 : 따옴표 묶지 않음
+      // 함수와 변수는 따옴표가 없지만 괄호 유무로 구분
+      $('.box1').css({      // .css('font-size','30px'); 여러개의 property를 적용할때는 중괄호를 사용하지 않고 따옴표를 이용하는게 좋다
+        width : 100,
+        height : 100,
+        'background-color' : '#f00', // '-' 이 사용되는 객체 이름은 ''로 묶어 주어야 함.
+        'font-size' : 30
+
+
+      });
+
+    });
+
+  </script>
+</head>
+<body>
+
+<pre>
+
+  1. jQuery 함수
+
+    - jQuery() = $() <!-- 같은표현 축약형태 -->
+
+    - 함수의 인수(인자)를 기준으로 DOM 또는 HTML 문자열과 일치하는 요소(Element)의 컬렉션(객체와 비슷함)을 반환함.
+
+  2. jQuery 진입점(실행 시작점)
+
+    - $(document).ready(function(){ 실행구문 }); <!-- document 나 window 객체를 사용할 때는 따옴표를 사용하지 않는다 -->
+
+    - $(function(){});
+
+    - 진입점(시작점) : DOM 이 모두 로딩된 이후에 코드를 실행할 수 있게 함( 이미지 로딩은 제외 ) <!-- DOM 은 이미지를 포함하지 않는 텍스트로 이루어짐 -->
+
+    - DOM 이 먼저 로딩 완료되고, 이후에 이미지 로딩이 완료됨
+</pre>
+
+<div class="box1">box1</div>
+
+</body>
+</html>
