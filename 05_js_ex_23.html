@@ -9,7 +9,6 @@
       height:100px;
       background:palegoldenrod;
     }
-
     .box1,
     .box2,
     .box3,
@@ -18,7 +17,6 @@
       top:0;
       left:0;
     }
-
     /* 이미지 슬라이딩 */
     .rolling{
       width:400px;
@@ -26,21 +24,18 @@
       left:50%;
       margin-left:-200px;
     }
-
     .view{
       width:400px;
       height:300px;
       overflow:hidden;
       position:relative;
     }
-
     .view-image{
       display:block;
       position:absolute;
       top:0;
       left:0;
     }
-
     .arrow-wrap{
       width:100%;
       position:absolute;
@@ -48,34 +43,43 @@
       margin-top:-15px;
       left:0;
     }
-
     .arrow{
       display:block;
       width:30px;
+      height:30px;
+      border:0;
+      background:url(images/arrow_sprite.png) no-repeat 4px 0;
+      text-indent:-99999em;
       cursor:pointer;
       position:absolute;
       top:0;
       left:0;
     }
-
-    .arrow.left{
-      width:30px;
-      height:30px;
-      background:url(images/arrow_sprite.png) no-repeat 4px 0;
-      border:0;
-      text-indent:-99999em;
-    }
-
     .arrow.right{
-      width:30px;
-      height:30px;
-      background:url(images/arrow_sprite.png) no-repeat -26px 0;
-      border:0;
-      text-indent:-99999em;
-      left:auto; /* 위에 arrow 공통css 에서 left 0 을 해주어 arrow-right의 right 속성과 같이 적용되므로 left:auto; 속성을 사용해서 left 0 이 적용이 안되도록 해줘야함.  */
+      background-position:-27px 0;
+      left:auto;
       right:0;
     }
-
+    .control-wrap{
+      position: absolute;
+      left:50%;
+    }
+    .control-wrap:after{
+      content:"";
+      display:block;
+      clear:both;
+    }
+    .paging,
+    .play-wrap{
+      float:left;
+      margin:0;
+      padding:0;
+    }
+    .paging-item{
+      float:left;
+      list-style-type:none;
+      margin-right:10px;
+    }
   </style>
   <script src="lib/jquery-3.2.1.min.js"></script>
   <script>
@@ -130,7 +134,13 @@
      * 함수 기능
      *
      * 1. 초기화 - init()
-     *
+     * 2. 슬라이딩 - moveLeft()
+     * 3. 애니메이션 진행되지 않을 때 함수 실행 - if(), is() 함수
+     * 4. 자동 롤링 - autoRolling()
+     * 5. 화살표 클릭 시 자동롤링 취소 기능, 이후 5초가 지나면 자동롤링 재시작
+     * 6. Play, Pause 버튼 기능 - 동적으로 추가된 클래스 인식하는 방법
+     * 7. 이미지 개수만큼 페이징 표시 추가하기 - paging() 함수
+     * 8. 페이징 번호 클릭 시 해당 이미지가 화면으로 슬라이딩 되게하는 함수 - clickPaging()
      * */
 
     // 선언부
@@ -140,14 +150,177 @@
       $('.view-image').eq(1).css({ left:400 });
       $('.view-image').eq(2).css({ left:-400 });
 
+      marginCtrlWrap();
+      paging();
     }
+
+      var currentIndex=0;
+      var nextIndex=0;
+      // moveLeft() 실행 전 => nextIndex = 1
+      // moveRight() 실행 전 => nextIndex = 2(-1)
+
+      // nextIndex 값을 두 함수에 같이 사용해야 되다 보니 초기값은 0으로 해놓고 실행하기 전에 각 함수에서 원하는 값으로 해주고 실행시키면 된다.
+
+      var timeID;
+      var checkID;
+
+      function moveLeft(){
+
+        // 마지막 이미지의 인덱스 이면 처음 인덱스 번호로 되돌려 줌
+        if(nextIndex >= $('.view-image').length){ // length jquery 를 사용하여 이미지의 개수가 늘어났을경우 따라가게 함
+          nextIndex = 0;
+        }
+
+        // 마스킹 영역에서 현재 보이는 이미지를 영역 밖으로 슬라이딩
+        $('.view-image').eq(currentIndex).stop().animate({left:-400},1000);
+        // 다음 보일 이미지를 자리배치 한 이후, 영역 안으로 슬리이딩
+        $('.view-image').eq(nextIndex).css({left:400}).stop().animate({left:0},1000);
+
+        // 슬라이딩 이후 다음 보일 이미지가 현재 보이는 이미지가 되므로(마스킹 영역),
+        // currentIndex 값을 nextIndex 값으로 지정해줌
+        currentIndex = nextIndex;
+        // 다음 보일 이미지 인덱스 값을 1증가 시킴
+        nextIndex ++;
+        // a = a + 1 , a += 1 , a ++( 이건 1씩 증가일 때만 가능 ) 다 같은 말임
+
+      }
+
+      function moveRight(){
+
+
+        // 마지막 이미지의 인덱스 이면 처음 인덱스 번호로 되돌려 줌
+        if(nextIndex <= -1){ // length jquery 를 사용하여 이미지의 개수가 늘어났을경우 따라가게 함
+          nextIndex = $('.view-image').length-1;
+        }
+
+        // 마스킹 영역에서 현재 보이는 이미지를 영역 밖으로 슬라이딩
+        $('.view-image').eq(currentIndex).stop().animate({left:400},1000);
+        // 다음 보일 이미지를 자리배치 한 이후, 영역 안으로 슬라이딩
+        $('.view-image').eq(nextIndex).css({left:-400}).stop().animate({left:0},1000);
+
+        // 슬라이딩 이후 다음 보일 이미지가 현재 보이는 이미지가 되므로(마스킹 영역),
+        // currentIndex 값을 nextIndex 값으로 지정해줌
+        currentIndex = nextIndex;
+        // 다음 보일 이미지 인덱스 값을 1증가 시킴
+        nextIndex --;
+        // a = a + 1 , a += 1 , a ++( 이건 1씩 증가일 때만 가능 ) 다 같은 말임
+
+      }
+
+      function autoRolling(){
+        // 자동 롤링
+        // setInterval(함수, 시간) 함수 : javascript 기본 함수 - 지정된 시간마다 함수 반복 실행
+        // 시간 : animate 함수의 시간보다 커야 함
+        timeID = setInterval( function(){
+          nextIndex = currentIndex + 1;
+          moveLeft();
+        }, 1000);
+      }
+
+      function marginCtrlWrap(){
+
+        var wrapWidth = $('.control-wrap').width();
+
+        $('.control-wrap').css({
+          'margin-left' : -( wrapWidth / 2 )
+        });
+
+      }
+
+      function paging(){
+
+        var imgNumber = $('.view-image').length; // size() 갯수 구하는 함수
+
+        for(var i=0; i<imgNumber; i++){
+
+          $('.paging').append('<li class="paging-item"><a href="#" class="paging-link">' + (i+1) + '</a></li>');
+
+        }
+      }
+
+      function clickPaging(){
+
+
+      }
+
 
     // 실행부
 
       init();
 
-    // css() 함수를 사용했을 때 => 점프 이동
+      autoRolling();
 
+      $('.arrow.right').on('click', function(){
+        // clearInterval() : setInterval() 함수 진행을 취소하는 함수
+        clearInterval( timeID );
+        clearInterval( checkID );
+        // 시간 체크 - 클릭한 이후에 다시 클릭하는 시간
+        var count = 0;
+        checkID = setInterval(function(){
+          if(count == 5){
+            autoRolling();
+            clearInterval(checkID);
+          }
+          console.log(count);
+          count++;
+        }, 1000);
+        nextIndex = currentIndex + 1;
+
+        // 애니메이션이 진행되지 않을 때 함수를 실행
+        if( !$('.view-image').is(':animated') ){
+          moveLeft();
+        }
+      });
+
+      $('.arrow.left').on('click', function(){
+        // clearInterval() : setInterval() 함수 진행을 취소하는 함수
+        clearInterval( timeID );
+        clearInterval( checkID );
+        // 시간 체크 - 클릭한 이후에 다시 클릭하는 시간
+        var count = 0;
+        checkID = setInterval(function(){
+          if(count == 5){
+            autoRolling();
+            clearInterval(checkID);
+          }
+          console.log(count);
+          count++;
+        }, 1000);
+        nextIndex = currentIndex - 1;
+        // 애니메이션이 진행되지 않을 때 함수 실행
+        if( !$('.view-image').is(':animated') ) {
+          moveRight();
+        }
+      });
+
+      $(document).on('click', '.btn-control.pause', function(e){  // 동적으로 생성되는 경우에는 on 함수 대상자리에 document 를 넣어준다
+
+        clearInterval(timeID);
+
+        // e.target : 클릭한 실제 대상
+        $(e.target).removeClass('pause').addClass('play');
+        $(e.target).text('Play');
+
+      });
+
+      $(document).on('click', '.btn-control.play', function(e){  // 동적으로 생성되는 경우에는 on 함수 대상자리에 document 를 넣어준다
+        autoRolling();
+        // e.target : 클릭한 실제 대상
+        $(e.target).removeClass('play').addClass('pause');
+        $(e.target).text('Pause');
+
+      });
+
+        $(document).on('click', '.paging-item', function(e){
+
+          // 페이지 번호 클릭 시 화면 맨위로 스크롤되지 않도록 기본 동작을 막아줌.
+          e.preventDefault();
+
+          // 클릭한 요소의 인덱스 번호 : index() 함수 사용
+          // 이벤트 대상이 on() 함수의 인자로 명시해주는 경우에 해당 대상이  $(this) 가 됨 ( 현재 : '.paging-item' )
+          var indexNumber = $(this).index('.paging-item');
+
+        });
     });
   </script>
 </head>
@@ -183,9 +356,25 @@
     <img src="images/roll_03.jpg" alt="" class="view-image" />
   </div>
   <div class="arrow-wrap">
+
     <button type="button" class="arrow left">left</button>
     <button type="button" class="arrow right">right</button>
   </div>
+
+  <div class="control-wrap">
+
+    <ul class="paging">
+      <!--<li class="paging-item"><a href="#" class="paging-link">1</a></li>-->
+      <!--<li class="paging-item"><a href="#" class="paging-link">2</a></li>-->
+      <!--<li class="paging-item"><a href="#" class="paging-link">3</a></li>-->
+    </ul>
+
+    <div class="play-wrap">
+      <button type="button" class="btn-control pause">pause</button>
+    </div>
+
+  </div>
+
 </div>
 
 </body>
