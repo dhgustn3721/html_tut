@@ -240,9 +240,7 @@
 
       function clickPaging(){
 
-
       }
-
 
     // 실행부
 
@@ -320,6 +318,54 @@
           // 이벤트 대상이 on() 함수의 인자로 명시해주는 경우에 해당 대상이  $(this) 가 됨 ( 현재 : '.paging-item' )
           var indexNumber = $(this).index('.paging-item');
 
+          if( currentIndex != indexNumber){
+            if( currentIndex == 0 ){
+
+              if( indexNumber == $('.view-image').length-1 ){  // length는 이미지개수 3개 index 는 0,1,2 이므로 length 개수에서 -1 을 해줘야 index로 사용가능
+
+                nextIndex = currentIndex - 1;
+                if( !$('.view-image').is(':animated') ) {
+                  moveRight();
+                }
+              } else {
+
+                nextIndex = currentIndex + 1;
+                if( !$('.view-image').is(':animated') ){
+                  moveLeft();
+                }
+              }
+
+            } else if( currentIndex == $('.view-image').length-1 ) {
+
+              if (indexNumber == 0) {
+                nextIndex = currentIndex + 1;
+                if (!$('.view-image').is(':animated')) {
+                  moveLeft();
+                }
+              } else {
+                nextIndex = currentIndex - 1;
+                if (!$('.view-image').is(':animated')) {
+                  moveRight();
+                }
+              }
+
+            } else {
+
+                if( currentIndex < indexNumber ){
+
+                  nextIndex = currentIndex + 1;
+                  if( !$('.view-image').is(':animated') ){
+                    moveLeft();
+                  }
+
+                } else {
+                  nextIndex = currentIndex - 1;
+                  if( !$('.view-image').is(':animated') ) {
+                    moveRight();
+                  }
+                }
+            }
+          }
         });
     });
   </script>
