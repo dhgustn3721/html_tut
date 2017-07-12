@@ -311,6 +311,20 @@
 
         $(document).on('click', '.paging-item', function(e){
 
+          // 23번 파일 paging-item 에서 누를때 오토롤링 멈추지 않는 현상 해결하기 위해 아래 구문 추가함.
+          clearInterval( timeID );
+          clearInterval( checkID );
+          // 시간 체크 - 클릭한 이후에 다시 클릭하는 시간
+          var count = 0;
+          checkID = setInterval(function(){
+            if(count == 5){
+              autoRolling();
+              clearInterval(checkID);
+            }
+            console.log(count);
+            count++;
+          });
+
           // 페이지 번호 클릭 시 화면 맨위로 스크롤되지 않도록 기본 동작을 막아줌.
           e.preventDefault();
 
